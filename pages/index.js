@@ -18,8 +18,20 @@ const roles = {
 };
 
 export default function ComplaintApp() {
-  const [session, setSession] = useState(() => JSON.parse(localStorage.getItem("session")) || null);
-  const [role, setRole] = useState(session?.role || roles.USER);
+  const [session, setSession] = useState(null);
+
+useEffect(() => {
+  if (typeof window !== "undefined") {
+    const savedSession = localStorage.getItem("session");
+    if (savedSession) {
+      setSession(JSON.parse(savedSession));
+    }
+  }
+}, []);
+  const [role, setRole] = useState(roles.USER); // default role
+useEffect(() => {
+  if (session?.role) setRole(session.role);
+}, [session]);
   const [name, setName] = useState(session?.name || "");
   const [email, setEmail] = useState(session?.email || "");
   const [contact, setContact] = useState(session?.contact || "");
